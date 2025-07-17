@@ -1,0 +1,170 @@
+consumes:
+- application/json
+info:
+  description: HTTP server that handle cute Elephpants.
+  title: elephpants-api
+  version: 0.1.0
+produces:
+- application/json
+host: localhost:8080
+schemes:
+- http
+swagger: "2.0"
+tags:
+  - name: elephpants
+    description: Handle Elephpants
+
+paths:
+  /healthz:
+    get:
+      description: Check Health
+      tags:
+        - elephpants
+      operationId: checkHealth
+      produces:
+      - text/plain
+      responses:
+        '200':
+          description: OK message.
+          headers:
+            Access-Control-Allow-Origin:
+              type: string
+          schema:
+            type: string
+            enum:
+            - OK
+  /elephpants:
+    get:
+      description: List Gophers
+      tags:
+        - elephpants
+      produces:
+       - application/json
+      responses:
+        200:
+          description: Return the Gophers list.
+          headers:
+            Access-Control-Allow-Origin:
+              type: string
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Elephpant'
+
+
+  /elephpant:
+    post:
+      summary: Add a new Gopher
+      tags:
+        - elephpants
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: elephpant
+          description: The Gopher to create.
+          schema:
+            type: object
+            required:
+              - name
+              - displayname
+              - url
+            properties:
+              name:
+                type: string
+              displayname:
+                type: string
+              url:
+                type: string
+      responses:
+        201:
+          description: Created
+          schema:
+            type: object
+            $ref: '#/definitions/Elephpant'
+        409:
+          description: Gopher already exists
+    get:
+      description: Get a elephpant by a given name
+      tags:
+        - elephpants
+      produces:
+       - application/json
+      parameters:
+        - name: name
+          in: query
+          type: string
+          required: true
+          description: Gopher name
+      responses:
+        200:
+          description: A elephpant
+          headers:
+            Access-Control-Allow-Origin:
+              type: string
+          schema:
+            type: object
+            $ref: '#/definitions/Elephpant'
+        404:
+          description: A elephpant with the specified Name was not found.
+          headers:
+            Access-Control-Allow-Origin:
+              type: string
+    delete:
+      description: Delete a elephpant by a given name
+      tags:
+        - elephpants
+      parameters:
+        - name: name
+          in: query
+          type: string
+          required: true
+          description: Elephpant name
+      responses:
+        200:
+          description: OK
+        404:
+          description: A elephpant with the specified Name was not found.
+    put:
+      description: Update a elephpant
+      tags:
+        - elephpants
+      parameters:
+        - in: body
+          name: elephpant
+          description: The elephpant to update.
+          schema:
+            type: object
+            required:
+              - name
+              - displayname
+              - url
+            properties:
+              name:
+                type: string
+              displayname:
+                type: string
+              url:
+                type: string
+      responses:
+        200:
+          description: Updated
+          schema:
+            type: object
+            $ref: '#/definitions/Elephpant'
+        404:
+          description: A elephpant with the specified Name was not found.
+
+definitions:
+  Elephpant:
+    type: object
+    properties:
+      name:
+        type: string
+        example: my-elephpant
+      displayname:
+        type: string
+        example: My elephpant
+      url:
+        type: string
+        example: https://raw.githubusercontent.com/scraly/elephpants/main/ElePHPant.png
