@@ -50,8 +50,6 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Elephpant'
-
-
   /elephpant:
     post:
       summary: Add a new Gopher
@@ -154,6 +152,31 @@ paths:
             $ref: '#/definitions/Elephpant'
         404:
           description: A elephpant with the specified Name was not found.
+
+  /elephpant/image:
+    get:
+      description: Get a elephpant image by a given name
+      tags:
+        - elephpants
+      produces:
+       - image/png
+      parameters:
+        - name: name
+          in: query
+          type: string
+          required: true
+          description: Gopher name
+      responses:
+        200:
+          description: OK
+          headers:
+            Access-Control-Allow-Origin:
+              type: string
+        404:
+          description: A elephpant with the specified Name was not found.
+          headers:
+            Access-Control-Allow-Origin:
+              type: string
 
 definitions:
   Elephpant:

@@ -2,9 +2,12 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"log"
+	"net/http"
 
 	"github.com/go-openapi/loads"
+	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/runtime/middleware"
 	"github.com/scraly/elephpants-api/pkg/swagger/server/models"
 	"github.com/scraly/elephpants-api/pkg/swagger/server/restapi"
@@ -44,6 +47,8 @@ func main() {
 	api.ElephpantsDeleteElephpantHandler = elephpants.DeleteElephpantHandlerFunc(DeleteElephpant)
 
 	api.ElephpantsPutElephpantHandler = elephpants.PutElephpantHandlerFunc(UpdateElephpant)
+
+	api.ElephpantsGetElephpantImageHandler = elephpants.GetElephpantImageHandlerFunc(GetElephpantImageByName)
 
 	// Start server which listening
 	if err := server.Serve(); err != nil {
@@ -102,7 +107,7 @@ func GetElephpantByName(elephpantParam elephpants.GetElephpantParams) middleware
 
 	for _, myElephpant := range theElephpants {
 		if myElephpant.Name == elephpantParam.Name {
-			fmt.Println("Elephpant", elephpantParam.Name, "found in DB")
+			fmt.Println("Elephpant", elephpantParam.Name, "found")
 
 			return elephpants.NewGetElephpantOK().WithPayload(
 				&models.Elephpant{
@@ -110,6 +115,45 @@ func GetElephpantByName(elephpantParam elephpants.GetElephpantParams) middleware
 					Displayname: myElephpant.Displayname,
 					URL:         myElephpant.URL}).
 				WithAccessControlAllowOrigin("*")
+		}
+	}
+
+	//If theElephpant have not been found, returns a 404 HTTP Error Code
+	return elephpants.
+		NewGetElephpantNotFound().
+		WithAccessControlAllowOrigin("*")
+}
+
+// Returns an object of type Elephpant with a given name
+func GetElephpantImageByName(elephpantParam elephpants.GetElephpantImageParams) middleware.Responder {
+	fmt.Println("[GetElephpantByName] Call method")
+
+	for _, myElephpant := range theElephpants {
+		if myElephpant.Name == elephpantParam.Name {
+			fmt.Println("Elephpant", elephpantParam.Name, "found")
+
+			URL := "https://raw.githubusercontent.com/scraly/elephpants/refs/heads/main/" + elephpantParam.Name + ".png"
+
+			// Get the image and return it
+			response, err := http.Get(URL)
+			if err != nil {
+				fmt.Println(err)
+			}
+			defer response.Body.Close()
+
+			if response.StatusCode == 200 {
+				image, err := io.ReadAll(response.Body)
+				if err != nil {
+					fmt.Println(err)
+				}
+
+				return middleware.ResponderFunc(func(rw http.ResponseWriter, pr runtime.Producer) {
+					rw.WriteHeader(200)
+					rw.Write(image)
+				})
+			} else {
+				fmt.Println("Error: " + elephpantParam.Name + " not exists! :-(")
+			}
 		}
 	}
 
@@ -169,7 +213,7 @@ func DeleteElephpant(elephpantParam elephpants.DeleteElephpantParams) middleware
 
 	for i, myElephpant := range theElephpants {
 		if myElephpant.Name == elephpantParam.Name {
-			fmt.Println("Elephpant", elephpantParam.Name, "found in DB, try to delete it")
+			fmt.Println("Elephpant", elephpantParam.Name, "found, try to delete it")
 
 			theElephpants = append(theElephpants[:i], theElephpants[i+1:]...)
 

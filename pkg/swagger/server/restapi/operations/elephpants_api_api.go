@@ -42,6 +42,7 @@ func NewElephpantsAPIAPI(spec *loads.Document) *ElephpantsAPIAPI {
 
 		JSONConsumer: runtime.JSONConsumer(),
 
+		BinProducer:  runtime.ByteStreamProducer(),
 		JSONProducer: runtime.JSONProducer(),
 		TxtProducer:  runtime.TextProducer(),
 
@@ -50,6 +51,9 @@ func NewElephpantsAPIAPI(spec *loads.Document) *ElephpantsAPIAPI {
 		}),
 		ElephpantsGetElephpantHandler: elephpants.GetElephpantHandlerFunc(func(params elephpants.GetElephpantParams) middleware.Responder {
 			return middleware.NotImplemented("operation elephpants.GetElephpant has not yet been implemented")
+		}),
+		ElephpantsGetElephpantImageHandler: elephpants.GetElephpantImageHandlerFunc(func(params elephpants.GetElephpantImageParams) middleware.Responder {
+			return middleware.NotImplemented("operation elephpants.GetElephpantImage has not yet been implemented")
 		}),
 		ElephpantsGetElephpantsHandler: elephpants.GetElephpantsHandlerFunc(func(params elephpants.GetElephpantsParams) middleware.Responder {
 			return middleware.NotImplemented("operation elephpants.GetElephpants has not yet been implemented")
@@ -95,6 +99,9 @@ type ElephpantsAPIAPI struct {
 	//   - application/json
 	JSONConsumer runtime.Consumer
 
+	// BinProducer registers a producer for the following mime types:
+	//   - image/png
+	BinProducer runtime.Producer
 	// JSONProducer registers a producer for the following mime types:
 	//   - application/json
 	JSONProducer runtime.Producer
@@ -106,6 +113,8 @@ type ElephpantsAPIAPI struct {
 	ElephpantsDeleteElephpantHandler elephpants.DeleteElephpantHandler
 	// ElephpantsGetElephpantHandler sets the operation handler for the get elephpant operation
 	ElephpantsGetElephpantHandler elephpants.GetElephpantHandler
+	// ElephpantsGetElephpantImageHandler sets the operation handler for the get elephpant image operation
+	ElephpantsGetElephpantImageHandler elephpants.GetElephpantImageHandler
 	// ElephpantsGetElephpantsHandler sets the operation handler for the get elephpants operation
 	ElephpantsGetElephpantsHandler elephpants.GetElephpantsHandler
 	// ElephpantsPostElephpantHandler sets the operation handler for the post elephpant operation
@@ -187,6 +196,9 @@ func (o *ElephpantsAPIAPI) Validate() error {
 		unregistered = append(unregistered, "JSONConsumer")
 	}
 
+	if o.BinProducer == nil {
+		unregistered = append(unregistered, "BinProducer")
+	}
 	if o.JSONProducer == nil {
 		unregistered = append(unregistered, "JSONProducer")
 	}
@@ -199,6 +211,9 @@ func (o *ElephpantsAPIAPI) Validate() error {
 	}
 	if o.ElephpantsGetElephpantHandler == nil {
 		unregistered = append(unregistered, "elephpants.GetElephpantHandler")
+	}
+	if o.ElephpantsGetElephpantImageHandler == nil {
+		unregistered = append(unregistered, "elephpants.GetElephpantImageHandler")
 	}
 	if o.ElephpantsGetElephpantsHandler == nil {
 		unregistered = append(unregistered, "elephpants.GetElephpantsHandler")
@@ -258,6 +273,8 @@ func (o *ElephpantsAPIAPI) ProducersFor(mediaTypes []string) map[string]runtime.
 	result := make(map[string]runtime.Producer, len(mediaTypes))
 	for _, mt := range mediaTypes {
 		switch mt {
+		case "image/png":
+			result["image/png"] = o.BinProducer
 		case "application/json":
 			result["application/json"] = o.JSONProducer
 		case "text/plain":
@@ -310,6 +327,10 @@ func (o *ElephpantsAPIAPI) initHandlerCache() {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}
 	o.handlers["GET"]["/elephpant"] = elephpants.NewGetElephpant(o.context, o.ElephpantsGetElephpantHandler)
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/elephpant/image"] = elephpants.NewGetElephpantImage(o.context, o.ElephpantsGetElephpantImageHandler)
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}

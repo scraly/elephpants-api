@@ -191,6 +191,44 @@ func init() {
         }
       }
     },
+    "/elephpant/image": {
+      "get": {
+        "description": "Get a elephpant image by a given name",
+        "produces": [
+          "image/png"
+        ],
+        "tags": [
+          "elephpants"
+        ],
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Gopher name",
+            "name": "name",
+            "in": "query",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "type": "string"
+              }
+            }
+          },
+          "404": {
+            "description": "A elephpant with the specified Name was not found.",
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
     "/elephpants": {
       "get": {
         "description": "List Gophers",
@@ -443,6 +481,44 @@ func init() {
           },
           "404": {
             "description": "A elephpant with the specified Name was not found."
+          }
+        }
+      }
+    },
+    "/elephpant/image": {
+      "get": {
+        "description": "Get a elephpant image by a given name",
+        "produces": [
+          "image/png"
+        ],
+        "tags": [
+          "elephpants"
+        ],
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Gopher name",
+            "name": "name",
+            "in": "query",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "type": "string"
+              }
+            }
+          },
+          "404": {
+            "description": "A elephpant with the specified Name was not found.",
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "type": "string"
+              }
+            }
           }
         }
       }

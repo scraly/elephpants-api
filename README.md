@@ -99,6 +99,22 @@ Response:
 
 /!\ Returns a 404 HTTP Error Code if a Elephpant have not been found for the given name.
 
+* Get directly the image of an ElePHPant
+
+```bash
+$ curl "localhost:8080/elephpant/image?name=ElePHPant"
+```
+
+Response:
+
+```bash
+$ curl "localhost:8080/elephpant/image?name=ElePHPant" --output o.png
+
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100 72529    0 72529    0     0   739k      0 --:--:-- --:--:-- --:--:--  745k
+```
+
 * Add a new Elephpant
 
 ```

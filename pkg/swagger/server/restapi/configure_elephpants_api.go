@@ -36,6 +36,7 @@ func configureAPI(api *operations.ElephpantsAPIAPI) http.Handler {
 
 	api.JSONConsumer = runtime.JSONConsumer()
 
+	api.BinProducer = runtime.ByteStreamProducer()
 	api.JSONProducer = runtime.JSONProducer()
 	api.TxtProducer = runtime.TextProducer()
 
@@ -47,6 +48,11 @@ func configureAPI(api *operations.ElephpantsAPIAPI) http.Handler {
 	if api.ElephpantsGetElephpantHandler == nil {
 		api.ElephpantsGetElephpantHandler = elephpants.GetElephpantHandlerFunc(func(params elephpants.GetElephpantParams) middleware.Responder {
 			return middleware.NotImplemented("operation elephpants.GetElephpant has not yet been implemented")
+		})
+	}
+	if api.ElephpantsGetElephpantImageHandler == nil {
+		api.ElephpantsGetElephpantImageHandler = elephpants.GetElephpantImageHandlerFunc(func(params elephpants.GetElephpantImageParams) middleware.Responder {
+			return middleware.NotImplemented("operation elephpants.GetElephpantImage has not yet been implemented")
 		})
 	}
 	if api.ElephpantsGetElephpantsHandler == nil {
