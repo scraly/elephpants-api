@@ -75,6 +75,21 @@ var theElephpants = allElephpants{
 		Displayname: "ElePHPant harry potter",
 		URL:         "https://raw.githubusercontent.com/scraly/elephpants/refs/heads/main/ElePHPant-harry-potter.png",
 	},
+	{
+		Name:        "forumphp",
+		Displayname: "ForumPHP",
+		URL:         "https://raw.githubusercontent.com/scraly/elephpants/refs/heads/main/forumphpv2.png",
+	},
+	{
+		Name:        "yoda",
+		Displayname: "Yoda PHP",
+		URL:         "https://raw.githubusercontent.com/scraly/elephpants/refs/heads/main/yoda.png",
+	},
+	{
+		Name:        "yodav2",
+		Displayname: "Yoda PHP v2",
+		URL:         "https://raw.githubusercontent.com/scraly/elephpants/refs/heads/main/yodav2.png",
+	},
 }
 
 // Health route returns OK
